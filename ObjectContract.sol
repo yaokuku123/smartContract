@@ -15,10 +15,10 @@ contract ObjectContract{
         uint limitTime;
     }
     
-    //"bob","ObjectContract-test"
-    constructor(string _name,string _description) public{
+    //"bob",0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db,"ObjectContract-test"
+    constructor(string _name,address _objectAddr,string _description) public{
         owner = msg.sender;
-        objectAddr = msg.sender;
+        objectAddr = _objectAddr;
         name = _name;
         description = _description;
         gmtCreate = now;

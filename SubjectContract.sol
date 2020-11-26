@@ -7,7 +7,7 @@ contract SubjectContract{
     string public name;
     string public description;
     uint public gmtCreate;
-    int public price;
+    int public amount;
     
     //"yorick",0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2,"subjectContract-test"
     constructor(string _name,address _subjectAddr,string _description) public{
@@ -18,14 +18,14 @@ contract SubjectContract{
         gmtCreate = now;
     }
     
-    function getPrice() public view returns(int){
-        return price;
+    function getAmount() public view returns(int){
+        return amount;
     }
     
-    function updatePrice(int money) public {
+    function updateAmount(int money) public {
         require(msg.sender == owner);
-        require(price + money >= 0);
-        price += money;
+        require(amount + money >= 0);
+        amount += money;
     }
     
     function removeSubectContract() public{

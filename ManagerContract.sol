@@ -1,8 +1,8 @@
 pragma solidity ^0.4.22;
 
 contract SubjectContract{
-    function getPrice() public view returns(int);
-    function updatePrice(int money) public;
+    function getAmount() public view returns(int);
+    function updateAmount(int money) public;
 }
 
 contract ObjectContract{
@@ -32,7 +32,6 @@ contract ManagerContract{
     }
     
     struct RegisterObj{
-        string resource;
         address objectAddr;
         address resourceAddr;
         bool isValued;
@@ -69,7 +68,7 @@ contract ManagerContract{
     }
     
     /* ********************USER********************* */
-    //"yorick",0xf8e81d47203a594245e36c48e151709f0c19fbe8
+    //"yorick",0xd9145CCE52D386f254917e481eB44e9943F39138
     //"yorick",0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db
     function addAndUpdateUser(string _username,address _userAddr) public {
         require(msg.sender == owner);
@@ -122,37 +121,35 @@ contract ManagerContract{
     }
     
     /* ********************REGISTER********************* */
-    function getRegisterObj(string _methodName) public view returns(bool){
-        bytes32 key = stringToBytes32(_methodName);
+    function getRegisterObj(string _resource) public view returns(bool){
+        bytes32 key = stringToBytes32(_resource);
         return registers[key].isValued;
     }
     
-    //"method1","file",0x5B38Da6a701c568545dCfcB03FcB875f56beddC4,0xd9145CCE52D386f254917e481eB44e9943F39138
-    function addAndUpdateRegisterObj(string _methodName,string _resource,address _objectAddr,address _resourceAddr) public{
+    //"file",0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db,0xd9145CCE52D386f254917e481eB44e9943F39138
+    function addAndUpdateRegisterObj(string _resource,address _objectAddr,address _resourceAddr) public{
         require(msg.sender == owner);
-        bytes32 key = stringToBytes32(_methodName);
-        registers[key].resource = _resource;
+        bytes32 key = stringToBytes32(_resource);
         registers[key].objectAddr = _objectAddr;
         registers[key].resourceAddr = _resourceAddr;
         registers[key].isValued = true;
     }
     
-    function deleteRegisterObj(string _methodName) public{
+    function deleteRegisterObj(string _resource) public{
         require(msg.sender == owner);
-        bytes32 key = stringToBytes32(_methodName);
+        bytes32 key = stringToBytes32(_resource);
         delete registers[key];
     }
     
-    //"yorick","method1","browse"
-    function getPerssion(string _username,string _methodName,string _operation) public returns(bool){
-        if(getUser(_username) == false || getRegisterObj(_methodName) == false) return false;
+    //"yorick","file","browse"
+    function getPerssion(string _username,string _resource,string _operation) public returns(bool){
+        if(getUser(_username) == false || getRegisterObj(_resource) == false) return false;
         bytes32 role = getRole(_username);
         if(rolePolicies[role][stringToBytes32(_operation)] == false) return false;
-        bytes32 methodName = stringToBytes32(_methodName);
-        address resourceAddr = registers[methodName].resourceAddr;
-        string memory resource = registers[methodName].resource;
+        bytes32 resource = stringToBytes32(_resource);
+        address resourceAddr = registers[resource].resourceAddr;
         objectContract = ObjectContract(resourceAddr);
-        return objectContract.rbacAccessControl(resource);
+        return objectContract.rbacAccessControl(_resource);
     }
     
    
