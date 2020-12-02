@@ -22,10 +22,8 @@ contract SubjectContract{
         return amount;
     }
     
-    function updateAmount(int money) public {
-        require(msg.sender == owner);
-        require(amount + money >= 0);
-        amount += money;
+    function updateAmount(int _amount) public {
+        amount = _amount;
     }
     
     function removeSubectContract() public{

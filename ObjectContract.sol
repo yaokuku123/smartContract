@@ -78,4 +78,17 @@ contract ObjectContract{
         require(msg.sender == owner);
         selfdestruct(this);
     }
+    
+    //条款 1：如果资源已经托管在平台上并且允许访问，资源访问次数>0，资源有效时间大于现在的时间，用户可以访问资源。
+    //term no1: User can access resource
+    //      when resource did exsit and ((count > 0) and (limitTime > now)) is true.
+    function term_no1_rbacAccessControl(string _resource) public view returns(bool){
+        bytes32 key = stringToBytes32(_resource);
+        if(getPolicy(_resource)==false) return false;
+        if(stringToBytes32(resourcePolicies[key].permission) != stringToBytes32("allow")) return false;
+        if(resourcePolicies[key].count <= 0) return false;
+        if(resourcePolicies[key].limitTime < now) return false;
+        return true;
+    }
+    
 }
